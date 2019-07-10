@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+            <title>Song list-Partyfy</title>
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+            
+    </head>
+    
+    
+    <body class="table-dark"> 
+            
+            <table class="table table-dark">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Artist</th>
+                        <th scope="col">Album</th>
+                        <th scope="col">       </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for track in track_list_info%}
+                      <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{track.0}}</td>
+                        <td>{{track.1}}</td>
+                        <td>{{track.2}}</td>
+                        <td>
+                                <form action={% url 'addtrack' %} method="POST">{% csrf_token %}
+                                        <input type="hidden"  name="playlist_id" value={{playlist_id}}>
+                                        <input type="hidden"  name="track_id" value={{track.3}}>
+                                        <input type="hidden"  name="query" value={{query}}>
+                                      <input type="submit" name={{track.3}} value="add" type="button" class="btn btn-success btn-primary btn-lg"/>
+                                  </form>
+                        </td>
+                        
+                      </tr>
+                      {% endfor%}
+                     
+                    </tbody>
+                  </table>  
+                  <form action={% url 'backtoplaylist' %} method="POST">{% csrf_token %}
+                        <input type="hidden"  name="playlist_id" value={{playlist_id}}>
+                      <input type="submit"  value="back" type="button" class="btn btn-success btn-primary btn-lg"/>
+                  </form>
+                 
+                  
+    </body>
+</html>

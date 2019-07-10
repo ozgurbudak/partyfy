@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+<title>Create a new Playlist</title>
+
+<p>create playlist</p>
+
+<form action={% url 'createplaylist' %} method="POST">
+        {% csrf_token %}
+    <label for="your_name">Your name: </label>
+    <input type="hidden"  id="lat" name="latitude" value=""}>
+    <input type="hidden" id= "long" name="longitude" value="">
+    <input id="your_name" type="text" name="your_name" value="{{ current_name }}">
+    <input type="submit" value="OK">
+</form>
+
+
+
+<form action={% url 'playlist' %}>
+    <input type="submit" value="Back" />
+</form>
+
+
+
+
+
+
+
+<script>
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+  console.log(position.coords.latitude, position.coords.longitude);
+  document.getElementById("lat").value = position.coords.latitude;
+  document.getElementById("long").value = position.coords.longitude;
+});
+} else {
+  console.log("geolocation IS NOT available");
+}
+ 
+ </script>
+</html>

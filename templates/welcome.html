@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>Welcome!</title>
+
+    <style type="text/css">
+
+    #div1{
+        float: left;
+        
+    }
+
+    #div2{
+        float: left;
+        margin-left: 350px;
+        border-style: solid;
+        border-color: white;
+    }
+
+    #div3{
+        float: right;
+        border-style: solid;
+        border-color: white;
+    }
+    </style>
+
+</head>
+
+
+<body style="background-color: black">
+        <h1 align= "center" style="color: white;">Hello there {{ sp.me.display_name }}</h1>
+        <div style="margin-top: 200px">
+        <div id="div1">
+                <form action={% url 'map' %} method="POST">{% csrf_token %}
+                        <input name= "map of parties" type="image" width=400 height= 400 class="d-block" src="https://i.ibb.co/v3wsfFk/2-24417-free-download-world-map-plain-black-and-white.jpg"/>
+                </form>
+
+        </div>
+        
+        <div id="div2">
+        <form action={% url 'playlist' %} method="POST">{% csrf_token %}
+                <input name= "show playlists" type="image" width=400 height= 400 class="d-block" src="https://i0.wp.com/www.helloitsliam.com/wp-content/uploads/2018/02/playlist.png?fit=750%2C750&ssl=1"/>
+        </form>
+        </div>
+
+
+        <div id="div3">
+        <form action={% url 'createplaylist' %} method="POST">{% csrf_token %}
+                <input name= "create new playlist" type="image" width=400 height= 400 class="d-block" src="https://i.ibb.co/xzFzCs4/plus.jpg"/>
+        </form>
+        </div>
+
+        </div>
+</body>
+
+
+
+</html>

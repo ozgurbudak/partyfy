@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+            <title>Song list-Partyfy</title>
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+            <style>
+              
+              
+              /* The Modal (background) */
+              .modal {
+                display: none; /* Hidden by default */
+                position: fixed; /* Stay in place */
+                z-index: 1; /* Sit on top */
+                padding-top: 100px; /* Location of the box */
+                left: 0;
+                top: 0;
+                width: 100%; /* Full width */
+                height: 100%; /* Full height */
+                overflow: auto; /* Enable scroll if needed */
+                
+              }
+              
+              /* Modal Content */
+              .modal-content {
+                background-color: #fefefe;
+                margin: auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 30%;
+              }
+              
+              /* The Close Button */
+              .close {
+                color: #aaaaaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+              }
+              
+              .close:hover,
+              .close:focus {
+                
+                text-decoration: none;
+                cursor: pointer;
+              }
+              </style>
+    </head>
+    
+    
+    <body class="table-dark"> 
+            
+            <table class="table table-dark">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Artist</th>
+                        <th scope="col">Album</th>
+                        <th scope="col">       </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for track in track_list_info%}
+                      <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{track.0}}</td>
+                        <td>{{track.1}}</td>
+                        <td>{{track.2}}</td>
+                        <td>
+                          <form action={% url 'removetrack' %} method="POST">{% csrf_token %}
+                              <input type="hidden"  name="playlist_id" value={{playlist_id}}>
+                            <input type="submit" name={{track.3}} value="delete" type="button" class="btn btn-success btn-primary btn-lg"/>
+                        </form>
+                        </td>
+                        
+                      </tr>
+                      {% endfor%}
+                     
+                    </tbody>
+                  </table>  
+
+                  <form action={% url 'searchtrack' %} method="POST">{% csrf_token %}
+                      <input type="hidden"  name="playlist_id" value={{playlist_id}}>
+                      <input type="text" name="search">
+                    <input type="submit" value="add song" type="button" class="btn btn-success btn-primary btn-lg"/>
+                </form>
+                <form action={% url 'playlist' %} method="POST">{% csrf_token %}
+                    
+                  <input type="submit" name="back" value="back" type="button" class="btn btn-success btn-primary btn-lg"/>
+              </form>
+
+{% if is_owner %}
+              <!-- Trigger/Open The Modal -->
+<button id="myBtn" class="btn btn-success btn-primary btn-lg">Requests</button>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    {% for user in request_list%}
+    <div>
+    <h2  style="color: black">{{user.user_name}} </h2>
+    <form  action={% url 'request' %} method="POST">{% csrf_token %}
+      <input type="hidden"  name="playlist_id" value={{playlist_id}}>
+      <input type="hidden"  name="type" value="yes">
+      <input type="hidden"  name="user_id" value="{{user.user_id}}">
+    <input type="submit" value="give access" type="button" class="btn btn-success btn-primary "/>
+    </form>
+    <form action={% url 'request' %} method="POST">{% csrf_token %}
+        <input type="hidden"  name="playlist_id" value={{playlist_id}}>
+        <input type="hidden"  name="type" value="no">
+        <input type="hidden"  name="user_id" value="{{user.user_id}}">
+      <input type="submit" value="ignore" type="button" class="btn btn-success btn-primary "/>
+    </form>
+    <p></p>
+    </div>
+    {% endfor%}
+
+
+  </div>
+
+</div>
+{% endif %}
+
+{% if not is_owner %}
+
+<form  action={% url 'request_access' %} method="POST">{% csrf_token %}
+    <input type="hidden"  name="playlist_id" value={{playlist_id}}>
+    <input type="hidden"  name="user_id" value="{{me}}">
+  <input type="submit" value="request access" type="button" class="btn btn-success btn-primary "/>
+</form>
+
+{% endif %}
+
+
+
+
+{% if  is_owner %}
+
+<form  action={% url 'delete_playlist' %} method="POST">{% csrf_token %}
+    <input type="hidden"  name="playlist_id" value={{playlist_id}}>
+  <input type="submit" value="delete playlist" type="button" class="btn btn-success btn-primary "/>
+</form>
+
+{% endif %}
+
+
+{% if  is_owner %}
+
+{% if  active %}
+<form  action={% url 'toggle_activation' %} method="POST">{% csrf_token %}
+    <input type="hidden"  name="playlist_id" value={{playlist_id}}>
+  <input type="submit" value="deactivate playlist" type="button" class="btn btn-danger btn-primary "/>
+</form>
+{% else %}
+<form  action={% url 'toggle_activation' %} method="POST">{% csrf_token %}
+  <input type="hidden"  name="playlist_id" value={{playlist_id}}>
+<input type="submit" value="activate playlist" type="button" class="btn btn-success btn-primary "/>
+</form>
+{% endif %}
+
+
+{% endif %}
+
+
+<script>
+  // Get the modal
+  var modal = document.getElementById("myModal");
+  
+  // Get the button that opens the modal
+  var btn = document.getElementById("myBtn");
+  
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+  
+  // When the user clicks the button, open the modal 
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+  
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+  </script>
+    </body>
+</html>
